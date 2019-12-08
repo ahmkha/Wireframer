@@ -1,5 +1,5 @@
 const initState = {
-    todoLists: []
+    wireframes: []
 };
 
 const todoListReducer = (state = initState, action) => {

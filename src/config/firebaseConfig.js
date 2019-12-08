@@ -5,14 +5,13 @@ import 'firebase/auth';
 // THIS IS USED TO INITIALIZE THE firebase OBJECT
 // PUT YOUR FIREBASE PROJECT CONFIG STUFF HERE
 var firebaseConfig = {
-    apiKey: "AIzaSyCJxkqx-6PMJrZ7ACkrgbO55b5wmJdop1Y",
-    authDomain: "todo-rrf-316.firebaseapp.com",
-    databaseURL: "https://todo-rrf-316.firebaseio.com",
-    projectId: "todo-rrf-316",
-    storageBucket: "todo-rrf-316.appspot.com",
-    messagingSenderId: "892398996038",
-    appId: "1:892398996038:web:1fb9157fc6c5d266e01847",
-    measurementId: "G-TEGQB3MZ23"
+    apiKey: "AIzaSyAToKbxweCS4cWKmfTD2ke48jXoP-UUs3Y",
+    authDomain: "cse316finalproject-c82bf.firebaseapp.com",
+    databaseURL: "https://cse316finalproject-c82bf.firebaseio.com",
+    projectId: "cse316finalproject-c82bf",
+    storageBucket: "cse316finalproject-c82bf.appspot.com",
+    messagingSenderId: "244109501625",
+    appId: "1:244109501625:web:8ab12a9964bfa26973a768"
 };
 firebase.initializeApp(firebaseConfig);
 
