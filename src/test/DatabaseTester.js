@@ -10,30 +10,40 @@ class DatabaseTester extends React.Component {
     // TO LOG IN
     handleClear = () => {
         const fireStore = getFirestore();
+        const { firebase } = this.props;
         fireStore.collection('users').get().then(function(querySnapshot){
             querySnapshot.forEach(function(doc) {
-                console.log("deleting " + doc.id);
-                fireStore.collection('users').doc(doc.id).delete();
+                console.log("clearing " + doc.id);
+                fireStore.collection('users').doc(doc.id).update({
+                        wireframes: []
+                    }).then(() => {
+                        console.log("DATABASE RESET");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
             })
         });
     }
 
     handleReset = () => {
         const fireStore = getFirestore();
-        todoJson.users.forEach(todoListJson => {
-            fireStore.collection('users').add({
-                    email: todoListJson.email,
-                    password: todoListJson.password,
-                    firstName: todoListJson.firstName,
-                    lastName: todoListJson.lastName,
-                    initials: todoListJson.initials,
-                    isAdmin: todoListJson.isAdmin,
-                    wireframes: todoListJson.wireframes
-                }).then(() => {
-                    console.log("DATABASE RESET");
-                }).catch((err) => {
-                    console.log(err);
+        const { firebase } = this.props;
+        fireStore.collection('users').get().then(function(querySnapshot){
+            querySnapshot.forEach(function(doc) {
+                console.log("clearing " + doc.id);
+                todoJson.users.forEach(todoListJson => {
+                    if(doc.data().email === todoListJson.email){
+                        fireStore.collection('users').doc(doc.id).update({
+                                isAdmin: todoListJson.isAdmin, 
+                                wireframes: todoListJson.wireframes
+                            }).then(() => {
+                                console.log("DATABASE RESET");
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                    }
                 });
+            })
         });
     }
 

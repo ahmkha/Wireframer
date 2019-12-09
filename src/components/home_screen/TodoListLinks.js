@@ -11,7 +11,7 @@ class TodoListLinks extends React.Component {
         return (
             <div className="todo-lists section">
                 {todoLists && todoLists.map(todoList => (
-                    <Link to={'/todoList/' + todoList.id} key={todoList.id}>
+                    <Link to={'/wireframe/' + todoList.id} key={todoList.id}>
                         <TodoListCard todoList={todoList} />
                     </Link>
                 ))}
@@ -21,9 +21,11 @@ class TodoListLinks extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.firebase.profile);
     return {
-        todoLists: state.firestore.ordered.todoLists,
+        //todoLists: state.firestore.ordered.users,
         auth: state.firebase.auth,
+        todoLists: state.firebase.profile.wireframes,
     };
 };
 

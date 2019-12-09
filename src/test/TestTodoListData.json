@@ -11,6 +11,7 @@
             "wireframes": [
                 {
                     "key": 0,
+                    "name": "Tweedah",
                     "height": 100,
                     "width": 100,
                     "zoomDist": 1,
@@ -47,6 +48,7 @@
                 },
                 {
                     "key": 1,
+                    "name": "Fazebook",
                     "height": 1000,
                     "width": 1000,
                     "zoom_dist": 1,
@@ -94,6 +96,7 @@
             "wireframes": [
                 {
                     "key": 0,
+                    "name": "CSE 316",
                     "height": 100,
                     "width": 100,
                     "zoomDist": 1,

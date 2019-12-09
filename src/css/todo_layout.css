@@ -34,6 +34,56 @@ form button, form h5 {
   margin: 20px 0;
 }
 
+.wireframer {
+  position: relative;
+  height: 475px;
+  grid-row-gap: 0px;
+  grid-column-gap: 50px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.wireframeEditor {
+  position: absolute;
+  height:100%;
+  width: 20%;
+  /* left: 2%; */
+  border-color: black;
+  border-style: solid;
+}
+
+.wireframeCanvas {
+  position: absolute;
+  height:100%;
+  width: 80%;
+  /* left: 25%; */
+  border-color: black;
+  border-style: solid;
+}
+
+.controls {
+  position: absolute;
+  height:100%;
+  width: 20%;
+  left: 80%;
+  border-color: black;
+  border-style: solid;
+}
+
+.wireframeFinalize {
+  border-color: black;
+  border-style: solid;
+}
+
+.container_wireframe {
+  height:50px;
+  width:150px;
+  background-color:white;
+  border-color: black;
+  border-style: solid;
+}
+
 input[type=text]:not(.browser-default):focus:not([readonly]),
 input[type=email]:not(.browser-default):focus:not([readonly]),
 input[type=password]:not(.browser-default):focus:not([readonly]),
