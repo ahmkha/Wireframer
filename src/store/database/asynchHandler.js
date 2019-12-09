@@ -37,3 +37,12 @@ export const registerHandler = (newUser, firebase) => (dispatch, getState, { get
         dispatch(actionCreators.registerError);
     });
 };
+
+export const deleteHandler = (profile, todoList, firebase) => (dispatch, getState, { getFirestore }) => {
+  const fireStore = getFirestore();
+  fireStore.collection('users').doc(profile.uid).update({
+    wireframes: todoList
+  }).then(() => {
+      dispatch(actionCreators.deleteSuccess);
+  });
+}

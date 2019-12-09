@@ -11,6 +11,7 @@ export const REGISTER_ERROR = 'REGISTER_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const DELETE_SUCCESS = 'DELETE_SUCCESS';
 
 // THESE CREATORS MAKE ACTIONS ASSOCIATED WITH USER ACCOUNTS
 
@@ -28,6 +29,9 @@ export function loginError(error) {
 };
 export function logoutSuccess() {
     return { type: 'LOGOUT_SUCCESS' }
+};
+export function deleteSuccess() {
+    return { type: 'DELETE_SUCCESS' }
 };
 
 // THESE CREATORS MAKE ACTIONS FOR ASYNCHRONOUS TODO LIST UPDATES

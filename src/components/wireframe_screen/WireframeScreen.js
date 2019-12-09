@@ -3,6 +3,9 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import { DndProvider } from 'react-dnd';
+import zoomIn from '../../images/3-512.png';
+import zoomOut from '../../images/4-512.png';
 
 class WireframeScreen extends Component {
     state = {
@@ -31,8 +34,8 @@ class WireframeScreen extends Component {
                 <div className = "wireframeEditor">
 
                   <div className = "wireframeFinalize">
-                    <img src = "../../images/3-512.png" />
-                    <img src = "../../images/4-512.png" />
+                    <img className = "zoom" src = {zoomIn}/>
+                    <img className = "zoom" src = {zoomOut} />
                     <button>Save</button>
                     <button>Close</button>
                   </div>
@@ -66,7 +69,6 @@ class WireframeScreen extends Component {
 
                 <div className = "wireframeCanvas">
                   <div>
-
                   </div>
                 </div>
 
@@ -86,7 +88,7 @@ class WireframeScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const { wireframes } = state.firestore.data;
+  const  wireframes  = state.firebase.profile.wireframes;
   const wireframe = wireframes ? wireframes[id] : null;
   if(wireframe)
     wireframe.id = id;
