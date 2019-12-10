@@ -3,9 +3,13 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { DndProvider } from 'react-dnd';
 import zoomIn from '../../images/3-512.png';
 import zoomOut from '../../images/4-512.png';
+import Canvas from './Canvas.js';
+import Control from './Control.js';
+import Draggable from 'react-draggable';
+import { DndProvider } from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
 
 class WireframeScreen extends Component {
     state = {
@@ -30,6 +34,7 @@ class WireframeScreen extends Component {
         }
 
         return (
+          <DndProvider backend={Backend}>
             <div className="card z-depth-0 wireframer">
                 <div className = "wireframeEditor">
 
@@ -65,12 +70,11 @@ class WireframeScreen extends Component {
                     <div>Textfield </div>
                   </div>
 
+                  <div></div>
+
                 </div>
 
-                <div className = "wireframeCanvas">
-                  <div>
-                  </div>
-                </div>
+                <Canvas></Canvas>
 
                 <div className = "controls">
                   <div>Properties: </div>
@@ -82,6 +86,7 @@ class WireframeScreen extends Component {
                   <div> Border Radius: <input type="number"></input></div>
                 </div>
             </div>
+            </DndProvider>
         );
     }
 }

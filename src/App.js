@@ -3,7 +3,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
-
+import { DndProvider } from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
 import Navbar from './components/navbar/Navbar.js';
 import RegisterScreen from './components/register_screen/RegisterScreen.js';
 import LoginScreen from './components/login_screen/LoginScreen.js';
@@ -19,6 +20,7 @@ class App extends Component {
     // But if not then we doesn't render the one.
     if (auth.isLoaded) {
       return (
+        
         <BrowserRouter>
           <div className="App">
             <Navbar />
