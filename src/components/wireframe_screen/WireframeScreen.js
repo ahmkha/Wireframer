@@ -6,19 +6,29 @@ import { firestoreConnect } from 'react-redux-firebase';
 import zoomIn from '../../images/3-512.png';
 import zoomOut from '../../images/4-512.png';
 import Canvas from './Canvas.js';
-import { DndProvider } from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
 
 class WireframeScreen extends Component {
     state = {
-      controlsArr: [{
-        controlType: "butt",
-        item: "button",
-        text: "button"
-      }],
+      controlsArr: [],
       height: '',
       width: '',
-      name: ''
+      name: '',
+      selectedControl: -1,
+    }
+
+    componentDidMount() {
+      document.addEventListener('keydown', this.keysHandler.bind(this));
+    }
+
+    keysHandler(event) {
+        event.stopImmediatePropagation();
+        if(event.keyCode === 68 && event.ctrlKey){
+            event.preventDefault();
+            this.copyControl(this.state.selectedControl);
+        }else if(event.keyCode === 46){
+            event.preventDefault();
+            this.deleteControl(this.state.selectedControl);
+        }
     }
 
     handleChange = (e) => {
@@ -29,13 +39,52 @@ class WireframeScreen extends Component {
             [target.id]: target.value,
         }));
     }
+
+    copyControl = (index) => {
+      if(this.state.selectedControl != -1){
+        var controlDupe = this.state.controlsArr[index];
+        controlDupe.posX -= 100;
+        controlDupe.posY -= 100;
+        var controlArrNew = this.state.controlsArr;
+        controlArrNew.push(controlDupe);
+        this.setState(state => ({
+          controlsArr: controlArrNew
+        }));
+      }
+    }
+
+    deleteControl = (index) => {
+      if(this.state.selectedControl != -1){
+        var controlArrNew = this.state.controlsArr;
+        controlArrNew.splice(index, 1);
+        this.setState(state => ({
+          controlsArr: controlArrNew,
+          selectedControl: -1
+        }));
+      }
+    }
+
+    selectControl = (event, index) => {
+      event.stopPropagation();
+      this.setState(state => ({
+        selectedControl: index
+    }));
+    }
     
     addControl = (type) => {
-      console.log("-------REACHED?-------------");
       var control = {
         controlType: type,
-        item: type,
-        text: "button"
+        posX: 0,
+        posY: 0,
+        height: 100,
+        width: 100,
+        text: "Stinky",
+        fontSize: 15,
+        bgColor: "#ffffff",
+        borderColor:"#ffffff",
+        textColor:"#ffffff",
+        borderThickness: 15,
+        borderRadius: 15 
       }
       var controlsArrNew = this.state.controlsArr;
       controlsArrNew.push(control);
@@ -51,7 +100,6 @@ class WireframeScreen extends Component {
         }
 
         return (
-          <DndProvider backend={Backend}>
             <div className="card z-depth-0 wireframer">
                 <div className = "wireframeEditor">
 
@@ -68,12 +116,12 @@ class WireframeScreen extends Component {
                   </div>
 
                   <div>
-                    <button><div className = "container_wireframe"></div></button>
+                    <button onClick={() => this.addControl("container")}><div className = "container_wireframe"></div></button>
                     <div>Container </div>
                   </div>
 
                   <div>
-                    <button><label>Label</label></button>
+                    <button onClick={() => this.addControl("label")}><label>Label</label></button>
                     <div>Label </div>
                   </div>
 
@@ -83,7 +131,7 @@ class WireframeScreen extends Component {
                   </div>
 
                   <div>
-                    <button> <input type = "text"></input> </button>
+                    <button onClick={() => this.addControl("textfield")}> <input type = "text"></input> </button>
                     <div>Textfield </div>
                   </div>
 
@@ -91,7 +139,7 @@ class WireframeScreen extends Component {
 
                 </div>
 
-                <Canvas controlsArr={this.state.controlsArr}></Canvas>
+                <Canvas controlsArr={this.state.controlsArr} selectControl={this.selectControl}></Canvas>
 
                 <div className = "controls">
                   <div> Properties: </div>
@@ -103,7 +151,6 @@ class WireframeScreen extends Component {
                   <div> Border Radius: <input type="number"></input></div>
                 </div>
             </div>
-            </DndProvider>
         );
     }
 }
