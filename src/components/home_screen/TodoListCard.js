@@ -12,13 +12,11 @@ class TodoListCard extends React.Component {
         const { firebase, profile } = props;
         const { todoLists } = this.props;
         todoLists.splice(this.props.wireFrameindex, 1);
-        console.log(profile);
         props.delete(profile, todoLists, firebase);
     }
 
     render() {
         const { todoList } = this.props;
-        console.log("TodoListCard, todoList.id: " + todoList.id);
         return (
             <div className="card z-depth-0 todo-list-link">
                 <div className="card-content grey-text text-darken-3">

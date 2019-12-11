@@ -6,15 +6,19 @@ import { firestoreConnect } from 'react-redux-firebase';
 import zoomIn from '../../images/3-512.png';
 import zoomOut from '../../images/4-512.png';
 import Canvas from './Canvas.js';
-import Control from './Control.js';
-import Draggable from 'react-draggable';
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 
 class WireframeScreen extends Component {
     state = {
-        name: '',
-        owner: '',
+      controlsArr: [{
+        controlType: "butt",
+        item: "button",
+        text: "button"
+      }],
+      height: '',
+      width: '',
+      name: ''
     }
 
     handleChange = (e) => {
@@ -25,10 +29,23 @@ class WireframeScreen extends Component {
             [target.id]: target.value,
         }));
     }
+    
+    addControl = (type) => {
+      console.log("-------REACHED?-------------");
+      var control = {
+        controlType: type,
+        item: type,
+        text: "button"
+      }
+      var controlsArrNew = this.state.controlsArr;
+      controlsArrNew.push(control);
+      this.setState(state => ({
+        controlsArr: controlsArrNew
+      }));
+    }
 
     render() {
         const auth = this.props.auth;
-        const wireframe = this.props.wireframe;
         if (!auth.uid) {
             return <Redirect to="/" />;
         }
@@ -61,7 +78,7 @@ class WireframeScreen extends Component {
                   </div>
 
                   <div>
-                    <button><button>Button</button></button>
+                    <button onClick={() => this.addControl("button")}>ADD BUTTON</button>
                     <div>Button </div>
                   </div>
 
@@ -74,10 +91,10 @@ class WireframeScreen extends Component {
 
                 </div>
 
-                <Canvas></Canvas>
+                <Canvas controlsArr={this.state.controlsArr}></Canvas>
 
                 <div className = "controls">
-                  <div>Properties: </div>
+                  <div> Properties: </div>
                   <div> Font Size: <input type="number"></input></div>
                   <div> Font Color: <input type="color"></input></div>
                   <div> Background Color: <input type="color"></input></div>

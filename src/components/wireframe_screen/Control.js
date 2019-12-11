@@ -39,16 +39,20 @@ class Control extends Component {
     }
 
     render() {
-        const auth = this.props.auth;
-        const wireframe = this.props.wireframe;
         const { isDragging, connectDragSource, control} = this.props;
         const divStyle = {
           opacity: isDragging ? 0 : 1,
         };
-        
-        return connectDragSource(
-          <button style = {divStyle}> TEEEEEEEEEEEEEST</button>
-        )
+        console.log("button rendered");
+        if(this.props.control.controlType === "button"){
+          return connectDragSource(
+            <button style = {divStyle}> {this.props.control.text}</button>
+          )
+        }else{
+          return connectDragSource(
+            <button style = {divStyle}> TEEEEEEEEEEEEEST</button>
+          )
+        }
     }
 }
 
