@@ -23,71 +23,78 @@ class Control extends Component {
         return (
           <Rnd
             default={{
-              x: 0,
-              y: 0,
-              width: 50,
-              height: 10,
+              x: this.state.posX,
+              y: this.state.posY,
+              width: this.state.width,
+              height: this.state.height,
             }}
             bounds="parent"
-            minWidth={105}
-            minHeight={28}
+            minWidth={this.state.width + 55}
+            minHeight={this.state.height + 18}
             style={{ borderStyle: 'solid', borderColor: 'black' }}
             onClick={(e) => this.props.selectControl(e, this.state.index)}
+            onDragStop={(e, d) => this.props.repositionControl(this.state.index, d.x, d.y)}
+            onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.state.index, ref.style.width, ref.style.height)}
           >
-            <button style={{ width: '100%', height: '100%'}}>TEEEESSSST
-            </button>
+            <button style={{ width: '100%', height: '100%'}}>{this.state.text}</button>
           </Rnd>
         )
       }else if(this.props.control.controlType === "textfield"){
         return (
           <Rnd
             default={{
-              x: 0,
-              y: 0,
-              width: 200,
-              height: 100,
+              x: this.state.posX,
+              y: this.state.posY,
+              width: this.state.width,
+              height: this.state.height,
             }}
             bounds="parent"
-            minWidth={200}
-            minHeight={100}
+            minWidth={this.state.width}
+            minHeight={this.state.height}
             style={{ borderStyle: 'solid', borderColor: 'black' }}
             onClick={(e) => this.props.selectControl(e, this.state.index)}
+            onDragStop={(e, d) => this.props.repositionControl(this.state.index, d.x, d.y)}
+            onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.state.index, ref.style.width, ref.style.height)}
           >
-            <input type = "text" style={{ width: '100%', height: '100%'}}></input>
+            <input type = "text" style={{ width: '100%', height: '100%'}} defaultValue={this.state.text}></input>
           </Rnd>
         )
       }else if(this.props.control.controlType === "label"){
         return (
           <Rnd
             default={{
-              x: 0,
-              y: 0,
-              width: 100,
-              height: 30,
+              x: this.state.posX,
+              y: this.state.posY,
+              width: this.state.width,
+              height: this.state.height,
             }}
             bounds="parent"
-            minWidth={100}
-            minHeight={30}
+            minWidth={this.state.width}
+            minHeight={this.state.height}
             style={{ borderStyle: 'solid', borderColor: 'black' }}
             onClick={(e) => this.props.selectControl(e, this.state.index)}
+            onDragStop={(e, d) => this.props.repositionControl(this.state.index, d.x, d.y)}
+            onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.state.index, ref.style.width, ref.style.height)}
           >
-            <label style={{ width: '100%', height: '100%'}}>Label</label>
+            <label style={{ width: '100%', height: '100%'}}>{this.state.text}</label>
           </Rnd>
         )
       }else{
         return (
             <Rnd
               default={{
-                x: 0,
-                y: 0,
-                width: 200,
-                height: 100,
+                x: this.state.posX,
+                y: this.state.posY,
+                width: this.state.width,
+                height: this.state.height,
               }}
               bounds="parent"
-              minWidth={200}
-              minHeight={100}
+              minWidth={this.state.width}
+              minHeight={this.state.height}
               style={{ borderStyle: 'solid', borderColor: 'black' }}
               onClick={(event) => this.props.selectControl(event, this.state.index)}
+              onDragStop={(e, d) => this.props.repositionControl(this.state.index, d.x, d.y)}
+              onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.state.index, ref.style.width, ref.style.height)}
             >
               <div className = "container_wireframe" style={{ width: '100%', height: '100%'}}></div>
             </Rnd>

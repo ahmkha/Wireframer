@@ -68,7 +68,7 @@
                             "borderRadius": 0 
                         },
                         {
-                            "controlType": "input",
+                            "controlType": "textfield",
                             "posX": 20,
                             "posY": 20,
                             "height": 100,

@@ -16,7 +16,9 @@ class Canvas extends Component {
               <Control 
                 index = {index} 
                 control = {control}
-                selectControl={this.props.selectControl}/>
+                selectControl={this.props.selectControl}
+                repositionControl={this.props.repositionControl}
+                resizeControl={this.props.resizeControl}/>
             ))}
         </div>
         );
