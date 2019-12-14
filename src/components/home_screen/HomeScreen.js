@@ -3,9 +3,42 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
-import TodoListLinks from './TodoListLinks'
+import TodoListLinks from './TodoListLinks';
+import { getFirestore } from 'redux-firestore';
 
 class HomeScreen extends Component {
+
+    handleNewList = () => {
+        const fireStore = getFirestore();
+        const ref = fireStore.collection('users').doc(this.props.auth.uid);
+        const history = this.props.history;
+            ref.get().then(function(doc) {
+                if (doc.exists) {
+                    var wireframes = doc.data().wireframes;
+                    const new_wireframe = {
+                        "key": 0,
+                        "name": "Unknown",
+                        "height": 100,
+                        "width": 100,
+                        "controls": []
+                    }
+                    wireframes.unshift(new_wireframe);
+                    fireStore.collection('users').doc(doc.id).update({
+                        wireframes: wireframes
+                    }).then(() => {
+                        console.log("Added a new wireframe");
+                history.push('/wireframe/0');
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function(error) {
+                console.log("Error getting document:", error);
+            });
+    }
+
 
     render() {
         if (!this.props.auth.uid) {

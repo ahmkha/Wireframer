@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {Rnd} from 'react-rnd';
 
 class Control extends Component {
-
     render() {
+      console.log(this.props.control);
       if(this.props.control.controlType === "button"){
         return (
           <Rnd

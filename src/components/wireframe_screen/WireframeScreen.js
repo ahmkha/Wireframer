@@ -7,13 +7,15 @@ import zoomIn from '../../images/3-512.png';
 import zoomOut from '../../images/4-512.png';
 import Canvas from './Canvas.js';
 import { saveHandler } from '../../store/database/asynchHandler';
+import { Modal } from 'react-materialize';
+import { getFirestore } from 'redux-firestore';
 
 class WireframeScreen extends Component {
     state = {
-      controlsArr:  JSON.parse(JSON.stringify(this.props.wireframe.controls)),
-      height: '',
-      width: '',
-      name: '',
+      controlsArr:  this.props.wireframe  ? [] : JSON.parse(JSON.stringify(this.props.wireframe.controls)),
+      height: this.props.wireframe  ? 100: this.props.wireframe.height,
+      width: this.props.wireframe  ? 100 : this.props.wireframe.width,
+      name: this.props.wireframe  ? '' : this.props.wireframe.name,
       selectedControl: -1,
       madeChange: false
     }
@@ -31,6 +33,38 @@ class WireframeScreen extends Component {
 
     componentDidMount() {
       document.addEventListener('keydown', this.keysHandler);
+      const { id } = this.props;
+      if(id != 0) {
+        const fireStore = getFirestore();
+        const ref = fireStore.collection('users').doc(this.props.auth.uid);
+        ref.get().then(function(doc) {
+            if (doc.exists) {
+                var wireframes = doc.data().wireframes;
+                const temp = wireframes[id];
+                wireframes.splice(id, 1);
+                wireframes.unshift(temp);
+                fireStore.collection('users').doc(doc.id).update({
+                    wireframes: wireframes
+                }).then(() => {
+                    console.log("Added a new wireframe");
+                }).catch((err) => {
+                    console.log(err);
+                });
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+      }
+      var height = document.getElementById("height");
+      var width = document.getElementById("width");
+      var { wireframe } = this.props;
+      // document.getElementById("wireframeCanvas").style.height = (this.state.height * 600/5000) + "px";
+      // document.getElementById("wireframeCanvas").style.width = (this.state.width * 600/5000) + "px";
+      height.value = wireframe.height;
+      width.value = wireframe.width;
+
     }
 
     componentWillUnmount() {
@@ -48,6 +82,22 @@ class WireframeScreen extends Component {
         }
     }
 
+    handleChange = (e) => {
+      const { target } = e;
+      const { props } = this;
+      const { firebase, profile } = props;
+      const { wireframes } = this.props;
+
+      this.setState(state => ({
+          ...state,
+          [target.id]: target.value,
+          madeChange: true,
+      }))
+
+      wireframes[props.wireframe.id].name = this.state.name;
+    }
+
+
     copyControl = (index) => {
       if(index !== -1){
         var controlDupe = JSON.parse(JSON.stringify(this.state.controlsArr[index]));
@@ -61,9 +111,11 @@ class WireframeScreen extends Component {
         }
         var controlArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
         controlArrNew.push(controlDupe);
+        var newIndex = controlArrNew.length - 1
         this.setState(state => ({
           ...state,
-          controlsArr: controlArrNew
+          controlsArr: controlArrNew,
+          selectedControl: newIndex
         }));
         this.madeChange(true);
       }
@@ -147,11 +199,10 @@ class WireframeScreen extends Component {
     }
 
     resizeControl = (index, width, height) => {
-      console.log("----------?--------");
       var controlsArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
       var control = this.state.controlsArr[index];
-      control.width = width;
-      control.height = height;
+      control.width = Number(width.substring(0, width.length - 2));
+      control.height = Number(height.substring(0, height.length - 2));
       controlsArrNew[index] = control;
       this.setState(state => ({
         ...state,
@@ -167,30 +218,54 @@ class WireframeScreen extends Component {
       }));
     }
 
-    handleClose = () => {
-      if(this.state.madeChange){
-
-      }else{
-        this.props.history.push('/');
-      }
+    saveModal = (e) => {
+      this.handleSave(e);
+      this.props.history.push('/');
     }
+
+    close = () => {
+        const { id } = this.props;
+        const { props } = this;
+        const { firebase, profile } = props;
+        const { wireframes } = this.props;
+
+        const temp = wireframes[id];
+        wireframes.splice(id, 1);
+        wireframes.unshift(temp);
+        props.save(profile, wireframes, firebase);
+        this.props.history.push('/');
+    }
+
 
     render() {
         const auth = this.props.auth;
+        const close = <button id="close" onClick={this.close}>Close</button>;
+        const trigger = <button id="trig">Close</button>;
+
         if (!auth.uid) {
             return <Redirect to="/" />;
         }
         return (
             <div className="card z-depth-0 wireframer">
-                {/* <Modal header="Modal Header" trigger={trigger}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </Modal> */}
+                <div>
+                  <label htmlFor="email" className="active">Name:</label>
+                  <input type="text" name="name" id="name" onChange={this.handleChange} defaultValue={this.state.name} />
+                </div>
+
                 <div className = "wireframeEditor">
                   <div className = "wireframeFinalize">
                     <img className = "zoom" src = {zoomIn}/>
                     <img className = "zoom" src = {zoomOut} />
                     <button onClick={this.handleSave} disabled={!this.state.madeChange}>Save</button>
-                    <button>Close</button>
+                    {
+                      this.state.madeChange ? 
+                      <Modal header="Unsaved Changes" trigger={this.state.madeChange ? trigger : null}>
+                        You didn't save yet. You tryna save?
+                        <button className="btn green lighten-1 z-depth-0" onClick={this.saveModal}>Save Work!</button>
+                        <button className="btn pink lighten-1 z-depth-0" onClick={this.close}>Close this, chief.</button>
+                      </Modal> : close
+                    }
+
                   </div>
 
                   <div>
@@ -259,6 +334,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     wireframe,
     wireframes,
+    id,
     profile: state.firebase.auth,
     auth: state.firebase.auth,
   };
