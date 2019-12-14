@@ -25,13 +25,21 @@ class WireframeScreen extends Component {
       const { wireframes } = this.props;
       wireframes[props.wireframe.id].controls = this.state.controlsArr;
       props.save(profile, wireframes, firebase);
-  }
-
-    componentDidMount() {
-      document.addEventListener('keydown', this.keysHandler.bind(this));
     }
 
-    keysHandler(event) {
+    componentDidMount() {
+      console.log("MOUNT: \n");
+      console.log(this.state);
+      document.addEventListener('keydown', this.keysHandler);
+    }
+
+    componentWillUnmount() {
+      document.removeEventListener('keydown', this.keysHandler);
+    }
+
+    keysHandler = (event) => {
+        console.log("HANDLER: \n");
+        console.log(this.state);
         event.stopImmediatePropagation();
         if(event.keyCode === 68 && event.ctrlKey){
             event.preventDefault();
@@ -42,17 +50,7 @@ class WireframeScreen extends Component {
         }
     }
 
-    handleChange = (e) => {
-        const { target } = e;
-
-        this.setState(state => ({
-            ...state,
-            [target.id]: target.value,
-        }));
-    }
-
     copyControl = (index) => {
-      console.log(this.state);
       if(index !== -1){
         var controlDupe = this.state.controlsArr[index];
         controlDupe.posX -= 100;
@@ -73,7 +71,6 @@ class WireframeScreen extends Component {
     }
 
     deleteControl = (index) => {
-      console.log(this.state);
       if(index !== -1){
         var controlArrNew = this.state.controlsArr;
         controlArrNew.splice(index, 1);

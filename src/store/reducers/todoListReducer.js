@@ -1,7 +1,7 @@
 import * as actionCreators from '../actions/actionCreators'
 
 const initState = {
-    todoLists: []
+    wireframes: []
 };
 
 const todoListReducer = (state = initState, action) => {
