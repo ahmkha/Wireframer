@@ -15,6 +15,7 @@ class WireframeScreen extends Component {
       width: '',
       name: '',
       selectedControl: -1,
+      madeChange: false
     }
 
     handleSave = (e) => {
@@ -25,11 +26,10 @@ class WireframeScreen extends Component {
       const { wireframes } = this.props;
       wireframes[props.wireframe.id].controls = this.state.controlsArr;
       props.save(profile, wireframes, firebase);
+      this.madeChange(false);
     }
 
     componentDidMount() {
-      console.log("MOUNT: \n");
-      console.log(this.state);
       document.addEventListener('keydown', this.keysHandler);
     }
 
@@ -38,8 +38,6 @@ class WireframeScreen extends Component {
     }
 
     keysHandler = (event) => {
-        console.log("HANDLER: \n");
-        console.log(this.state);
         event.stopImmediatePropagation();
         if(event.keyCode === 68 && event.ctrlKey){
             event.preventDefault();
@@ -52,38 +50,39 @@ class WireframeScreen extends Component {
 
     copyControl = (index) => {
       if(index !== -1){
-        var controlDupe = this.state.controlsArr[index];
+        var controlDupe = JSON.parse(JSON.stringify(this.state.controlsArr[index]));
         controlDupe.posX -= 100;
         controlDupe.posY -= 100;
         if(controlDupe.posX < 0){
           controlDupe.posX = 0;
         }
         if(controlDupe.posY < 0){
-          controlDupe.posX = 0;
+          controlDupe.posY = 0;
         }
-        var controlArrNew = this.state.controlsArr;
+        var controlArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
         controlArrNew.push(controlDupe);
         this.setState(state => ({
           ...state,
           controlsArr: controlArrNew
         }));
+        this.madeChange(true);
       }
     }
 
     deleteControl = (index) => {
       if(index !== -1){
-        var controlArrNew = this.state.controlsArr;
+        var controlArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
         controlArrNew.splice(index, 1);
+        controlArrNew = JSON.parse(JSON.stringify(controlArrNew));
         this.setState(state => ({
-          ...state,
           controlsArr: controlArrNew,
           selectedControl: -1
         }));
+        this.madeChange(true);
       }
     }
 
     selectControl = (event, index) => {
-      console.log(this.state);
       event.stopPropagation();
       this.setState(state => ({
         ...state,
@@ -125,16 +124,17 @@ class WireframeScreen extends Component {
         borderThickness: 1,
         borderRadius: 0 
       }
-      var controlsArrNew = this.state.controlsArr;
+      var controlsArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
       controlsArrNew.push(control);
       this.setState(state => ({
         ...state,
         controlsArr: controlsArrNew
       }));
+      this.madeChange(true);
     }
 
     repositionControl = (index, x, y) => {
-      var controlsArrNew = this.state.controlsArr;
+      var controlsArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
       var control = this.state.controlsArr[index];
       control.posX = x;
       control.posY = y;
@@ -143,10 +143,12 @@ class WireframeScreen extends Component {
         ...state,
         controlsArr: controlsArrNew
       }));
+      this.madeChange(true);
     }
 
     resizeControl = (index, width, height) => {
-      var controlsArrNew = this.state.controlsArr;
+      console.log("----------?--------");
+      var controlsArrNew = JSON.parse(JSON.stringify(this.state.controlsArr));
       var control = this.state.controlsArr[index];
       control.width = width;
       control.height = height;
@@ -155,6 +157,22 @@ class WireframeScreen extends Component {
         ...state,
         controlsArr: controlsArrNew
       }));
+      this.madeChange(true);
+    }
+
+    madeChange = (bool) => {
+      this.setState(state => ({
+        ...state,
+        madeChange: bool
+      }));
+    }
+
+    handleClose = () => {
+      if(this.state.madeChange){
+
+      }else{
+        this.props.history.push('/');
+      }
     }
 
     render() {
@@ -162,21 +180,22 @@ class WireframeScreen extends Component {
         if (!auth.uid) {
             return <Redirect to="/" />;
         }
-
         return (
             <div className="card z-depth-0 wireframer">
+                {/* <Modal header="Modal Header" trigger={trigger}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </Modal> */}
                 <div className = "wireframeEditor">
-
                   <div className = "wireframeFinalize">
                     <img className = "zoom" src = {zoomIn}/>
                     <img className = "zoom" src = {zoomOut} />
-                    <button onClick={this.handleSave}>Save</button>
+                    <button onClick={this.handleSave} disabled={!this.state.madeChange}>Save</button>
                     <button>Close</button>
                   </div>
 
                   <div>
-                    <div>Height: <input type="number"></input></div>
-                    <div>Width: <input type="number"></input></div>
+                    <div>Height: <input type="number" id="height"></input></div>
+                    <div>Width: <input type="number" id="width"></input></div>
                   </div>
 
                   <div>
@@ -208,11 +227,15 @@ class WireframeScreen extends Component {
                   selectControl={this.selectControl} 
                   repositionControl={this.repositionControl}
                   resizeControl={this.resizeControl}
-                  >
+                >
 
-                  </Canvas>
+                </Canvas>
 
                 <div className = "controls">
+                  {/* <div style={{  border: '10px solid transparent', padding: '15px', borderImageSource: {border},
+                    borderImageRepeat: 'round',
+                    borderImageSlice: '30',
+                    borderImageWidth: '10px'}}> Properties: </div> */}
                   <div> Properties: </div>
                   <div> Font Size: <input type="number"></input></div>
                   <div> Font Color: <input type="color"></input></div>
