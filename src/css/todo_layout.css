@@ -21,8 +21,31 @@ body {
 }
 
 div.banner {
-  padding: 20px;
   margin-top: 60px;
+}
+
+.login-container, .register-container, .dashboard
+{
+  width: 100%;
+  margin-top: 10px;
+  padding-bottom: 12%;
+}
+
+.login-form, .register-form, .link-cards
+{
+  margin-top: 0px;
+}
+
+.wireframe-links-title
+{
+  padding-left: 15px;
+  margin-top: -23px;
+}
+
+.home_new_wireframe_container
+{
+  margin-left: 48%;
+  margin-top: 25px;
 }
 
 form {
@@ -36,7 +59,7 @@ form button, form h5 {
 
 .wireframer {
   position: relative;
-  height: 575px;
+  height: 675px;
   grid-row-gap: 0px;
   grid-column-gap: 50px;
   margin-top: 0px;
@@ -77,7 +100,6 @@ form button, form h5 {
   position: absolute;
   height:100%;
   width: 20%;
-  /* left: 2%; */
   border-color: black;
   border-style: solid;
 }
@@ -87,7 +109,6 @@ form button, form h5 {
   height:100%;
   left:20%;
   width: 60%;
-  /* left: 25%; */
   border-color: black;
   border-style: solid;
 }
@@ -119,6 +140,84 @@ form button, form h5 {
   width: 40px;
 }
 
+.close-button
+{
+  right: 3px;
+}
+
+.card-delete-button
+{
+  margin-left: 105%;
+  margin-top: -25%;
+  font-size: 20pt;
+}
+
+.modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-small, .modal .modal-footer .btn-flat
+{
+  margin-top: -24%;
+  margin-right: 80%;
+  background-color: red;
+}
+
+#save_modal_container.modal .modal-footer
+{
+  display: none;
+}
+
+.modal_yes_button:hover, .modal_no_button:hover, .modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-small, .modal .modal-footer .btn-flat:hover
+{
+  box-shadow: 1px 2px;
+}
+
+.modal_no_button
+{
+  margin-left: 20px;
+}
+
+.container_control_button, .label_control_button, .textfield_control_button
+{
+  background-color: white;
+  border-style: none;
+}
+
+.container_control_button
+{
+  margin-left: 20px;
+}
+
+.container_control 
+{
+  height:60px;
+  width:120px;
+  border-radius: 5px;
+}
+
+.label_control
+{
+  font-size: 12pt;
+}
+
+.label_control_button
+{
+  width: 80%;
+  margin-left: 20px;
+}
+
+.button_control
+{
+  width: 80%;
+  margin-left: 20px;
+}
+
+.textfield_control_button
+{
+  padding: 25px;
+  margin-left: 8px;
+}
+
+
+
+
 input[type=text]:not(.browser-default):focus:not([readonly]),
 input[type=email]:not(.browser-default):focus:not([readonly]),
 input[type=password]:not(.browser-default):focus:not([readonly]),
@@ -133,3 +232,294 @@ input[type=email]:not(.browser-default):focus:not([readonly]) + label,
 input[type=password]:not(.browser-default):focus:not([readonly]) + label{
   color: #ec407a !important;
 }
+
+
+/* html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+}
+
+body {
+  position: absolute;
+  width: 80%;
+  left: 10%;
+  top: 5%;
+}
+
+div.banner {
+  margin-top: 60px;
+}
+
+.login-container, .register-container, .dashboard
+{
+  width: 100%;
+  margin-top: 10px;
+  padding-bottom: 12%;
+}
+
+.login-form, .register-form, .link-cards
+{
+  margin-top: 0px;
+}
+
+.wireframe-links-title
+{
+  padding-left: 15px;
+  margin-top: -23px;
+}
+
+.home_new_wireframe_container
+{
+  margin-left: 48%;
+  margin-top: 25px;
+}
+
+form {
+  padding: 20px;
+  margin-top: 60px;
+}
+
+form button, form h5 {
+  margin: 20px 0;
+}
+
+.wireframe_editor {
+  position: relative;
+  height: 790px;
+  grid-row-gap: 0px;
+  grid-column-gap: 50px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 14pt;
+  left: -125px;
+}
+
+.controls_container
+{
+  padding: 30px;
+  height: 93.1%;
+}
+
+.wireframe-controls 
+{
+  position: absolute;
+  height:100%;
+  width: 20%;
+}
+
+.wireframe-canvas 
+{
+  position: absolute;
+  height:100%;
+  left:50%;
+  width: 60%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-color: black;
+  border-style: solid;
+  z-index: 0;
+}
+
+#draw
+{
+  width: 60%;
+  height: 135%;
+  overflow: auto;
+  transform: scale(1);
+  transform-origin: 0% 0%;
+  scrollbar-width: thin;
+}
+
+
+.control-edit-properties 
+{
+  position: absolute;
+  height: 135%;
+  width: 40%;
+  left: 80%;
+}
+
+.container_control_button, .label_control_button, .textfield_control_button
+{
+  background-color: white;
+  border-style: none;
+}
+
+.container_control_button
+{
+  margin-left: 20px;
+}
+
+.container_control 
+{
+  height:60px;
+  width:120px;
+  border-radius: 5px;
+}
+
+.label_control
+{
+  font-size: 12pt;
+}
+
+.label_control_button
+{
+  width: 80%;
+  margin-left: 20px;
+}
+
+.button_control
+{
+  width: 80%;
+  margin-left: 20px;
+}
+
+.textfield_control_button
+{
+  padding: 25px;
+  margin-left: 8px;
+}
+
+.font-color-name
+{
+  margin-left: 11%;
+}
+
+.background-name
+{
+  margin-top: -55.9px;
+  padding-left: 59%;
+}
+
+.color-picker
+{
+  float: left;
+  margin-left: 10px;
+}
+
+.background-color-picker
+{
+  margin-left: 250px;
+  
+}
+
+img
+{
+  height: 35px;
+  width: 35px;
+  margin-left: 5px;
+  margin-top: 8px;
+}
+
+.zoomout
+{
+  margin-left: 18px;
+  margin-right: 15px;
+}
+
+.navbar-container
+{
+  width: 95%;
+}
+
+.save-button, .close-button
+{
+  position:absolute;
+  padding: 5px;
+  font-size: 20px;
+  text-align: center;
+  top: 91px;
+}
+
+.close-button
+{
+  right: 3px;
+}
+
+.card-delete-button
+{
+  margin-left: 105%;
+  margin-top: -25%;
+  font-size: 20pt;
+}
+
+.modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-small, .modal .modal-footer .btn-flat
+{
+  margin-top: -24%;
+  margin-right: 80%;
+  background-color: red;
+}
+
+.border-input-field
+{
+  width: 50% !important;
+  margin-left: 11.8px !important;
+}
+
+.border-name
+{
+  margin-left: 51.4%;
+  margin-top: 0%;
+}
+
+.border-name-1
+{
+  margin-left: 51.4%;
+  margin-top: -11.5%;
+}
+
+#save_modal_container.modal .modal-footer
+{
+  display: none;
+}
+
+.modal_yes_button:hover, .modal_no_button:hover, .modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-small, .modal .modal-footer .btn-flat:hover
+{
+  box-shadow: 1px 2px;
+}
+
+.modal_no_button
+{
+  margin-left: 20px;
+}
+
+.card-delete-button:hover
+{
+  cursor: pointer;
+}
+
+.canvasContainer {
+  position: absolute;
+  height:100%;
+  left:20%;
+  width: 60%;
+  border-color: black;
+  border-style: solid;
+  border-width: medium;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=email]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]){
+  border-color: #ec407a;
+  box-shadow: none;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) + label,
+textarea.materialize-textarea:focus:not([readonly]) + label,
+input[type=email]:not(.browser-default):focus:not([readonly]) + label,
+input[type=password]:not(.browser-default):focus:not([readonly]) + label{
+  color: #ec407a !important;
+} */

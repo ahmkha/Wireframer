@@ -8,8 +8,8 @@ import zoomOut from '../../images/4-512.png';
 import Canvas from './Canvas.js';
 import { saveHandler } from '../../store/database/asynchHandler';
 import { Modal } from 'react-materialize';
-import { getFirestore } from 'redux-firestore';
 import { SketchPicker } from 'react-color';
+import { HuePicker } from 'react-color';
 
 class WireframeScreen extends Component {
     state = {
@@ -29,7 +29,6 @@ class WireframeScreen extends Component {
     }
 
     zoomIn = () => {
-      console.log("zooming in");
       var canvas = document.getElementById("draw");
       var factor = 0;
       if(this.state.zoom >= 1)
@@ -70,9 +69,44 @@ class WireframeScreen extends Component {
       const { wireframes } = this.props;
       wireframes[props.wireframe.id].controls = this.state.controlsArr;
       wireframes[props.wireframe.id].name = this.state.name;
+
+      if (this.state.dimensionUpdated) {
+        wireframes[props.wireframe.id].height = this.state.height;
+        wireframes[props.wireframe.id].width = this.state.width;
+      }
+
       props.save(profile, wireframes, firebase);
       this.madeChange(false);
     }
+
+    handleDimension = (e) => {
+      const { target } = e;
+
+      this.setState(state => ({
+          ...state,
+          [target.id]: target.value,
+          dimensionChange: true,
+      }))
+    }
+
+
+
+    handleUpdateDimensions = (e) => {
+        e.preventDefault();
+
+        const { props } = this;
+        const { firebase, profile } = props;
+        const { wireframes } = this.props;
+        if ((this.state.height>5000) || (this.state.height<1) || (this.state.width>5000) || (this.state.width<1)) {
+            console.log("Invalid Dimensions")
+        }
+        else {
+            // document.getElementById("wireframeCanvas").style.height = (this.state.updatedHeight * 625/5000) + "px";
+            // document.getElementById("wireframeCanvas").style.width = (this.state.updatedWidth * 625/5000) + "px";
+            this.setState({dimensionUpdated: true, madeChange: true});
+        }
+    }
+
 
     componentDidMount() {
       document.addEventListener('keydown', this.keysHandler);
@@ -413,6 +447,9 @@ class WireframeScreen extends Component {
         const auth = this.props.auth;
         const close = <button id="close" onClick={this.close}>Close</button>;
         const trigger = <button id="trig">Close</button>;
+        const wireframe = this.props.wireframe;
+        const height = this.props.wireframe.height;
+        const width = this.props.wireframe.width;
 
         if (!auth.uid) {
             return <Redirect to="/" />;
@@ -431,7 +468,7 @@ class WireframeScreen extends Component {
                     <button onClick={this.handleSave} disabled={!this.state.madeChange}>Save</button>
                     {
                       this.state.madeChange ? 
-                      <Modal header="Unsaved Changes" trigger={this.state.madeChange ? trigger : null}>
+                      <Modal header="Unsaved Changes" id = "save_modal_container" trigger={this.state.madeChange ? trigger : null}>
                         You didn't save yet. You tryna save?
                         <button className="btn green lighten-1 z-depth-0" onClick={this.saveModal}>Save Work!</button>
                         <button className="btn pink lighten-1 z-depth-0" onClick={this.close}>Close this, chief.</button>
@@ -441,28 +478,33 @@ class WireframeScreen extends Component {
                   </div>
 
                   <div>
-                    <div>Height: <input type="number" id="height"></input></div>
-                    <div>Width: <input type="number" id="width"></input></div>
+                    <div>Height: <input type="number" id="height" defaultValue={height} onChange={this.handleDimension}></input></div>
+                    <div>Width: <input type="number" id="width" defaultValue={width} onChange={this.handleDimension}></input></div>
+                    <button id="updateButton" disabled={!this.state.dimensionChange} onClick={this.handleUpdateDimensions}>Update Dimensions</button>
+
                   </div>
 
-                  <div>
-                    <button onClick={() => this.addControl("container")}><div className = "container_wireframe"></div></button>
-                    <div>Container </div>
-                  </div>
+                  <div className="controls_container">
+                    <div>
+                      <button onClick={() => this.addControl("container")} className = "container_control_button" ><div className = "container_control"></div></button>
+                      <div className="center-align">Container </div>
+                    </div>
+                    <br /><br />
 
-                  <div>
-                    <button onClick={() => this.addControl("label")}><label>Label</label></button>
-                    <div>Label </div>
-                  </div>
+                    <div>
+                      <button onClick={() => this.addControl("label")}  className = "label_control_button"><label className="label_control"> Label</label></button>
+                      <div className="center-align">Label </div>
+                    </div>
 
-                  <div>
-                    <button onClick={() => this.addControl("button")}>ADD BUTTON</button>
-                    <div>Button </div>
-                  </div>
+                    <div>
+                      <button onClick={() => this.addControl("button")}>ADD BUTTON</button>
+                      <div className="center-align">Button </div>
+                    </div>
 
-                  <div>
-                    <button onClick={() => this.addControl("textfield")}> <input type = "text"></input> </button>
-                    <div>Textfield </div>
+                    <div>
+                      <button onClick={() => this.addControl("textfield")}> <input type = "text" className="text_control"></input> </button>
+                      <div className="center-align">Textfield </div>
+                    </div>
                   </div>
 
                   <div></div>
@@ -487,12 +529,12 @@ class WireframeScreen extends Component {
                     <div>Properties </div><br />
                     <div> Text: <input value={this.setTextValue()} onChange={this.changeControlText} type="text"></input></div><br />
                     <div> Font Size: <input value={this.setFontSize()} onChange={this.changeFontSize} type="number"></input></div><br />
-                    <div> Font Color: <SketchPicker color={this.setColor("text")} onChange={(color) => this.changeColor(color, "text")} className="color-picker" /></div><br />
-                    <div> Background: <SketchPicker color={this.setColor("background")} onChange={(color) => this.changeColor(color, "background")} className="color-picker" /></div><br />
-                    <div> Border Color: <SketchPicker color={this.setColor("border")} onChange={(color) => this.changeColor(color, "border")} className="color-picker" /></div><br />
+                    <div> Font Color: <HuePicker width = "200px" color={this.setColor("text")} onChange={(color) => this.changeColor(color, "text")} className="color-picker" /></div><br />
+                    <div> Background: <HuePicker width = "200px" color={this.setColor("background")} onChange={(color) => this.changeColor(color, "background")} className="color-picker" /></div><br />
+                    <div> Border Color: <HuePicker width = "200px" color={this.setColor("border")} onChange={(color) => this.changeColor(color, "border")} className="color-picker" /></div><br />
                     <div> Border Thickness: <input value={this.setBorderThickness()} onChange={this.changeBorderThickness} type="number"></input></div><br />
                     <div> Border Radius: <input value={this.setBorderRadius()} onChange={this.changeBorderRadius} type="number"></input></div>
-                </div>
+                  </div>
 
                 </div>
             </div>

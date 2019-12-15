@@ -52,14 +52,14 @@ class HomeScreen extends Component {
                         <TodoListLinks history={this.props.history}/>
                     </div>
 
-                    <div className="col s8">
+                    <div className="">
                         <div className="banner">
                             @wireframe<br />
                             Wireframe Maker
                         </div>
                         
-                        <div className="home_new_list_container">
-                                <button className="home_new_list_button" onClick={this.handleNewList}>
+                        <div className="home_new_wireframe_container">
+                                <button className="home_new_wireframe_button" onClick={this.handleNewList}>
                                     Create a New Wireframe
                                 </button>
                         </div>

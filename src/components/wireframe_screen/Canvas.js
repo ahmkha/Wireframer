@@ -4,7 +4,7 @@ import Control from './Control.js'
 class Canvas extends Component {
     render() {
         return (     
-          <div className = "wireframeCanvas" onClick={(e) => this.props.selectControl(e, -1)}>
+          <div className = "wireframeCanvas" id="draw" onClick={(e) => this.props.selectControl(e, -1)}>
           {this.props.controlsArr.map((control, index) => 
               <Control 
                 index = {index} 
