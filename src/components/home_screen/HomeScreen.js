@@ -27,7 +27,7 @@ class HomeScreen extends Component {
                         wireframes: wireframes
                     }).then(() => {
                         console.log("Added a new wireframe");
-                history.push('/wireframe/0');
+                    history.push('/wireframe/0');
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -49,7 +49,7 @@ class HomeScreen extends Component {
             <div className="dashboard container">
                 <div className="row">
                     <div className="col s12 m4">
-                        <TodoListLinks />
+                        <TodoListLinks history={this.props.history}/>
                     </div>
 
                     <div className="col s8">

@@ -12,10 +12,10 @@ import { getFirestore } from 'redux-firestore';
 
 class WireframeScreen extends Component {
     state = {
-      controlsArr:  this.props.wireframe  ? [] : JSON.parse(JSON.stringify(this.props.wireframe.controls)),
-      height: this.props.wireframe  ? 100: this.props.wireframe.height,
-      width: this.props.wireframe  ? 100 : this.props.wireframe.width,
-      name: this.props.wireframe  ? '' : this.props.wireframe.name,
+      controlsArr: JSON.parse(JSON.stringify(this.props.wireframe.controls)),
+      height: this.props.wireframe.height,
+      width: this.props.wireframe.width,
+      name: this.props.wireframe.name,
       selectedControl: -1,
       madeChange: false
     }
@@ -27,36 +27,13 @@ class WireframeScreen extends Component {
       const { firebase, profile } = props;
       const { wireframes } = this.props;
       wireframes[props.wireframe.id].controls = this.state.controlsArr;
+      wireframes[props.wireframe.id].name = this.state.name;
       props.save(profile, wireframes, firebase);
       this.madeChange(false);
     }
 
     componentDidMount() {
       document.addEventListener('keydown', this.keysHandler);
-      const { id } = this.props;
-      if(id != 0) {
-        const fireStore = getFirestore();
-        const ref = fireStore.collection('users').doc(this.props.auth.uid);
-        ref.get().then(function(doc) {
-            if (doc.exists) {
-                var wireframes = doc.data().wireframes;
-                const temp = wireframes[id];
-                wireframes.splice(id, 1);
-                wireframes.unshift(temp);
-                fireStore.collection('users').doc(doc.id).update({
-                    wireframes: wireframes
-                }).then(() => {
-                    console.log("Added a new wireframe");
-                }).catch((err) => {
-                    console.log(err);
-                });
-            } else {
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-      }
       var height = document.getElementById("height");
       var width = document.getElementById("width");
       var { wireframe } = this.props;
@@ -93,8 +70,6 @@ class WireframeScreen extends Component {
           [target.id]: target.value,
           madeChange: true,
       }))
-
-      wireframes[props.wireframe.id].name = this.state.name;
     }
 
 
@@ -136,11 +111,22 @@ class WireframeScreen extends Component {
 
     selectControl = (event, index) => {
       event.stopPropagation();
+
+      if (index == -1){
+        {this.state.controlsArr.map((control) => (
+              control.className = "border"
+          ))}
+      }
+      else {
+        this.state.controlsArr[index].className = "borderimg";
+      }
+
       this.setState(state => ({
         ...state,
         selectedControl: index
       }));
-    }
+  }
+
     
     addControl = (type) => {
       var widthControl = 0;

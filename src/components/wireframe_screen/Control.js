@@ -10,9 +10,10 @@ class Control extends Component {
             size={{ width: this.props.control.width,  height: this.props.control.height }}
             position={{ x: this.props.control.posX, y: this.props.control.posY }}
             bounds="parent"
-            minWidth={this.props.control.width + 55}
-            minHeight={this.props.control.height + 18}
+            minWidth={75}
+            minHeight={38}
             style={{ borderStyle: 'solid', borderColor: 'black' }}
+            className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
@@ -26,14 +27,15 @@ class Control extends Component {
             size={{ width: this.props.control.width,  height: this.props.control.height }}
             position={{ x: this.props.control.posX, y: this.props.control.posY }}
             bounds="parent"
-            minWidth={this.props.control.width}
-            minHeight={this.props.control.height}
-            style={{ borderStyle: 'solid', borderColor: 'black' }}
+            minWidth={50}
+            minHeight={50}
+            style={{ borderStyle: 'solid', borderColor: 'black'}}
+            className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
           >
-            <input type = "text" style={{ width: '100%', height: '100%'}} defaultValue={this.props.control.text} ></input>
+            <input type = "text" style={{ width: '100%', height: '100%'}} value={this.props.control.text}></input>
           </Rnd>
         )
       }else if(this.props.control.controlType === "label"){
@@ -42,9 +44,10 @@ class Control extends Component {
             size={{ width: this.props.control.width,  height: this.props.control.height }}
             position={{ x: this.props.control.posX, y: this.props.control.posY }}
             bounds="parent"
-            minWidth={this.props.control.width}
-            minHeight={this.props.control.height}
+            minWidth={50}
+            minHeight={25}
             style={{ borderStyle: 'solid', borderColor: 'black' }}
+            className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
@@ -58,9 +61,10 @@ class Control extends Component {
               size={{ width: this.props.control.width,  height: this.props.control.height }}
               position={{ x: this.props.control.posX, y: this.props.control.posY }}
               bounds="parent"
-              minWidth={this.props.control.width}
-              minHeight={this.props.control.height}
+              minWidth={50}
+              minHeight={50}
               style={{ borderStyle: 'solid', borderColor: 'black' }}
+              className = {this.props.control.className}
               onClick={(event) => this.props.selectControl(event, this.props.index)}
               onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
               onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
