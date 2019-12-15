@@ -55,6 +55,24 @@ form button, form h5 {
   border-image: url('../images/border2.png') 30 stretch;
 }
 
+.wireframeCanvas {
+  position: absolute;
+  height:100%;
+  left:20%;
+  border-color: black;
+  border-style: solid;
+}
+
+#draw {
+  width: 60%;
+  height: 100%;
+  overflow: auto;
+  transform: scale(1);
+  transform-origin: 0% 0%;
+  border-width: thin;
+  scrollbar-width: thin;
+}
+
 .wireframeEditor {
   position: absolute;
   height:100%;

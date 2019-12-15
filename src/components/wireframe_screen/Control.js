@@ -3,6 +3,18 @@ import {Rnd} from 'react-rnd';
 
 class Control extends Component {
     render() {
+      let styleObject = {
+        width: '100%',
+        height: '100%',
+        fontSize: this.props.control.fontSize,
+        color: this.props.control.textColor,
+        backgroundColor: this.props.control.bgColor,
+        border: String(this.props.control.borderThickness) + 'px solid',
+        borderColor: this.props.control.borderColor,
+        borderRadius: this.props.control.borderRadius,
+        display: 'inline-block',
+    }
+
       console.log(this.props.control);
       if(this.props.control.controlType === "button"){
         return (
@@ -12,13 +24,12 @@ class Control extends Component {
             bounds="parent"
             minWidth={75}
             minHeight={38}
-            style={{ borderStyle: 'solid', borderColor: 'black' }}
             className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
           >
-            <button style={{ width: '100%', height: '100%'}}>{this.props.control.text}</button>
+            <button style={styleObject}>{this.props.control.text}</button>
           </Rnd>
         )
       }else if(this.props.control.controlType === "textfield"){
@@ -29,13 +40,12 @@ class Control extends Component {
             bounds="parent"
             minWidth={50}
             minHeight={50}
-            style={{ borderStyle: 'solid', borderColor: 'black'}}
             className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
           >
-            <input type = "text" style={{ width: '100%', height: '100%'}} value={this.props.control.text}></input>
+            <input type = "text" style={styleObject} defaultValue={this.props.control.text} ></input>
           </Rnd>
         )
       }else if(this.props.control.controlType === "label"){
@@ -46,13 +56,12 @@ class Control extends Component {
             bounds="parent"
             minWidth={50}
             minHeight={25}
-            style={{ borderStyle: 'solid', borderColor: 'black' }}
             className = {this.props.control.className}
             onClick={(e) => this.props.selectControl(e, this.props.index)}
             onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
             onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
           >
-            <label style={{ width: '100%', height: '100%'}}>{this.props.control.text}</label>
+            <label style={styleObject}>{this.props.control.text}</label>
           </Rnd>
         )
       }else{
@@ -69,7 +78,7 @@ class Control extends Component {
               onDragStop={(e, d) => this.props.repositionControl(this.props.index, d.x, d.y)}
               onResizeStop={(e, direction, ref, delta, position) => this.props.resizeControl(this.props.index, ref.style.width, ref.style.height)}
             >
-              <div className = "container_wireframe" style={{ width: '100%', height: '100%'}}></div>
+              <div className = "container_wireframe" style={styleObject}></div>
             </Rnd>
           )
       }

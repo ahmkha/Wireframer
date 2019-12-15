@@ -9,15 +9,57 @@ import Canvas from './Canvas.js';
 import { saveHandler } from '../../store/database/asynchHandler';
 import { Modal } from 'react-materialize';
 import { getFirestore } from 'redux-firestore';
+import { SketchPicker } from 'react-color';
 
 class WireframeScreen extends Component {
     state = {
       controlsArr: JSON.parse(JSON.stringify(this.props.wireframe.controls)),
-      height: this.props.wireframe.height,
-      width: this.props.wireframe.width,
       name: this.props.wireframe.name,
       selectedControl: -1,
+      zheight: 100,
+      zwidth: 60,
+      zoom: 1,
+      height: this.props.wireframe.height,
+      width: this.props.wireframe.width,
+      updatedHeight: this.props.wireframe.height,
+      updatedWidth: this.props.wireframe.width,
+      dimensionChange: false,
+      dimensionUpdated: false,
       madeChange: false
+    }
+
+    zoomIn = () => {
+      console.log("zooming in");
+      var canvas = document.getElementById("draw");
+      var factor = 0;
+      if(this.state.zoom >= 1)
+        factor = this.state.zoom + 1;
+      else
+        factor = this.state.zoom * 2;
+      this.setState({ zoom: factor }, () => {
+        canvas.style.width = (this.state.zwidth / this.state.zoom) + "%";
+        canvas.style.height = (this.state.zheight / this.state.zoom) + "%";
+        canvas.style.transform = "scale(" + this.state.zoom + ")";
+        console.log("width: " + this.state.zwidth / this.state.zoom);
+        console.log("height: " + this.state.zheight / this.state.zoom);
+      });
+    }
+
+    zoomOut = () => {
+      console.log("zooming out");
+      var canvas = document.getElementById("draw");
+      var factor = 0;
+      if(this.state.zoom > 1)
+        factor = this.state.zoom - 1;
+      else
+        factor = this.state.zoom / 2;
+      this.setState({ zoom: factor }, () => {
+        canvas.style.width = (this.state.zwidth * (1 / this.state.zoom)) + "%";
+        canvas.style.height = (this.state.zheight * (1 / this.state.zoom)) + "%";
+        canvas.style.transform = "scale(" + this.state.zoom + ")";
+        console.log("width: " + this.state.zwidth * (1 / this.state.zoom));
+        console.log("height: " + this.state.zheight * (1 / this.state.zoom));
+      });
     }
 
     handleSave = (e) => {
@@ -112,13 +154,12 @@ class WireframeScreen extends Component {
     selectControl = (event, index) => {
       event.stopPropagation();
 
-      if (index == -1){
-        {this.state.controlsArr.map((control) => (
-              control.className = "border"
-          ))}
-      }
-      else {
+      {this.state.controlsArr.map((control) => (
+        control.className -= "borderimg"
+      ))}
+      if (index !== -1){
         this.state.controlsArr[index].className = "borderimg";
+        console.log(this.state.controlsArr[index].className);
       }
 
       this.setState(state => ({
@@ -126,6 +167,7 @@ class WireframeScreen extends Component {
         selectedControl: index
       }));
   }
+
 
     
     addControl = (type) => {
@@ -166,7 +208,8 @@ class WireframeScreen extends Component {
       controlsArrNew.push(control);
       this.setState(state => ({
         ...state,
-        controlsArr: controlsArrNew
+        controlsArr: controlsArrNew,
+        selectedControl: controlsArrNew.length - 1
       }));
       this.madeChange(true);
     }
@@ -222,6 +265,149 @@ class WireframeScreen extends Component {
         this.props.history.push('/');
     }
 
+    setTextValue = () => {
+      if (this.state.selectedControl === -1 || this.state.controlsArr[this.state.selectedControl].control_type === "container") {
+          return ""
+      }
+      else {
+          return this.state.controlsArr[this.state.selectedControl].text;
+      }
+  }
+
+  changeControlText = (e) => {
+    if (this.state.selectedControl !== -1){
+        const { target } = e;
+
+        let newControls = this.state.controlsArr;
+        newControls[this.state.selectedControl].text = target.value;
+
+        this.setState(state => ({
+            ...state,
+            controlsArr: newControls,
+          }));
+    }
+  }
+
+  setFontSize = () => {
+      if (this.state.selectedControl === -1 || this.state.controlsArr[this.state.selectedControl].controlType === "container") {
+          return ""
+      }
+      else {
+          return this.state.controlsArr[this.state.selectedControl].fontSize;
+      }
+  }
+
+  changeFontSize = (e) => {
+    if (this.state.selectedControl !== -1){
+        const { target } = e;
+
+        let newControls = this.state.controlsArr;
+        newControls[this.state.selectedControl].fontSize = Number(target.value);
+
+        this.setState(state => ({
+            ...state,
+            controlsArr: newControls,
+          }));
+    }
+  }
+
+  setColor = (color_type) => {
+      if (this.state.selectedControl === -1) {
+          return "#000";
+      }
+      else {
+          if (color_type === "text" && this.state.controlsArr[this.state.selectedControl].controlType !== "container") {
+              return this.state.controlsArr[this.state.selectedControl].textColor;
+          }
+          else {
+              if (color_type === "background") {
+                  return this.state.controlsArr[this.state.selectedControl].bgColor;
+              }
+              else {
+                  return this.state.controlsArr[this.state.selectedControl].borderColor;
+              }
+          }
+      }
+  }
+
+  changeColor = (color, color_type) => {
+    if (this.state.selectedControl !== -1){
+        let newControls = this.state.controlsArr;
+
+        if (color_type === "text") {
+            newControls[this.state.selectedControl].textColor = color.hex;
+
+            this.setState(state => ({
+                ...state,
+                controlsArr: newControls,
+            }));
+        }
+
+        if (color_type === "background") {
+            newControls[this.state.selectedControl].bgColor = color.hex;
+
+            this.setState(state => ({
+                ...state,
+                controlsArr: newControls,
+            }));
+        }
+        
+        if (color_type === "border") {
+            newControls[this.state.selectedControl].borderColor = color.hex;
+
+            this.setState(state => ({
+                ...state,
+                controlsArr: newControls,
+            }));
+        }
+      }
+  }
+
+  setBorderThickness = () => {
+      if (this.state.selectedControl === -1) {
+          return ""
+      }
+      else {
+          return this.state.controlsArr[this.state.selectedControl].borderThickness;
+      }
+  }
+
+  changeBorderThickness = (e) => {
+    if (this.state.selectedControl !== -1){
+        const { target } = e;
+
+        let newControls = this.state.controlsArr;
+        newControls[this.state.selectedControl].borderThickness = Number(target.value);
+
+        this.setState(state => ({
+            ...state,
+            controlsArr: newControls,
+          }));
+      }
+  }
+
+  setBorderRadius = () => {
+      if (this.state.selectedControl === -1) {
+          return ""
+      }
+      else {
+          return this.state.controlsArr[this.state.selectedControl].borderRadius;
+      }
+  }
+
+  changeBorderRadius = (e) => {
+    if (this.state.selectedControl !== -1){
+        const { target } = e;
+
+        let newControls = this.state.controlsArr;
+        newControls[this.state.selectedControl].borderRadius = Number(target.value);
+
+        this.setState(state => ({
+            ...state,
+            controlsArr: newControls,
+          }));
+      }
+  }
 
     render() {
         const auth = this.props.auth;
@@ -240,8 +426,8 @@ class WireframeScreen extends Component {
 
                 <div className = "wireframeEditor">
                   <div className = "wireframeFinalize">
-                    <img className = "zoom" src = {zoomIn}/>
-                    <img className = "zoom" src = {zoomOut} />
+                    <img className = "zoom" src = {zoomIn} onClick={this.zoomIn}/>
+                    <img className = "zoom" src = {zoomOut} onClick={this.zoomOut}/>
                     <button onClick={this.handleSave} disabled={!this.state.madeChange}>Save</button>
                     {
                       this.state.madeChange ? 
@@ -297,13 +483,17 @@ class WireframeScreen extends Component {
                     borderImageRepeat: 'round',
                     borderImageSlice: '30',
                     borderImageWidth: '10px'}}> Properties: </div> */}
-                  <div> Properties: </div>
-                  <div> Font Size: <input type="number"></input></div>
-                  <div> Font Color: <input type="color"></input></div>
-                  <div> Background Color: <input type="color"></input></div>
-                  <div> Border Color: <input type="color"></input></div>
-                  <div> Border Thickness: <input type="number"></input></div>
-                  <div> Border Radius: <input type="number"></input></div>
+                  <div className = "control-edit-properties">
+                    <div>Properties </div><br />
+                    <div> Text: <input value={this.setTextValue()} onChange={this.changeControlText} type="text"></input></div><br />
+                    <div> Font Size: <input value={this.setFontSize()} onChange={this.changeFontSize} type="number"></input></div><br />
+                    <div> Font Color: <SketchPicker color={this.setColor("text")} onChange={(color) => this.changeColor(color, "text")} className="color-picker" /></div><br />
+                    <div> Background: <SketchPicker color={this.setColor("background")} onChange={(color) => this.changeColor(color, "background")} className="color-picker" /></div><br />
+                    <div> Border Color: <SketchPicker color={this.setColor("border")} onChange={(color) => this.changeColor(color, "border")} className="color-picker" /></div><br />
+                    <div> Border Thickness: <input value={this.setBorderThickness()} onChange={this.changeBorderThickness} type="number"></input></div><br />
+                    <div> Border Radius: <input value={this.setBorderRadius()} onChange={this.changeBorderRadius} type="number"></input></div>
+                </div>
+
                 </div>
             </div>
         );
